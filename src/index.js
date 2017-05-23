@@ -152,6 +152,21 @@ function deleteTextNodesRecursive(where) {
  * }
  */
 function collectDOMStat(root) {
+    var obj = {
+        texts:0,
+        tags:{},
+        classes:{}
+    }
+
+    var child = root.childNodes;
+    //количество текстовых узлов
+    for (var i = 0; i < child.length; i++){
+        if (child[i].nodeType == 3){
+            obj.texts++;
+        }
+    }
+
+    return obj;
     
 }
 
