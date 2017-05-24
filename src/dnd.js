@@ -14,7 +14,7 @@
  * homeworkContainer.appendChild(...);
  */
 let homeworkContainer = document.querySelector('#homework-container');
-debugger;
+
 var el_button = document.createElement('button');
 homeworkContainer.appendChild(el_button);
 el_button.addEventListener('click', createDiv);
@@ -27,15 +27,16 @@ el_button.addEventListener('click', createDiv);
  * @return {Element}
  */
 function createDiv() {
-	
-	var div = document.createElement('div');
-	div.classList.add('draggable-div');
-	div.style.backgroundColor = "red";
-	div.style.width = "50px";
-	div.style.height = "20px";
-	div.style.position = "absolute";
-	return (div);
-
+	debugger;
+	var el = document.createElement('div');
+	el.classList.add('draggable-div');
+	el.style.backgroundColor = "red";
+	el.style.width = "50px";
+	el.style.height = "20px";
+	el.style.position = "absolute";
+	el.style.top = "20px";
+	el.style.left = "10px";
+	return (el);
 }
 
 /**

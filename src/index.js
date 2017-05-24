@@ -53,6 +53,11 @@ function emulateClick(target) {
  * @param {function} fn - функция, которую нужно вызвать при клике на элемент BUTTON внутри target
  */
 function delegate(target, fn) {
+    target.addEventListener('click', function(e){
+        if (e.target.tagName == "BUTTON"){
+            fn();
+        }
+    });
 }
 
 /**
@@ -65,6 +70,11 @@ function delegate(target, fn) {
  * @param {function} fn - обработчик
  */
 function once(target, fn) {
+     target.addEventListener('click', new_func);
+     function new_func(e){
+        fn();
+        target.removeEventListener('click', new_func);
+     }
 }
 
 export {
