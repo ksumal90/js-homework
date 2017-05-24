@@ -14,6 +14,10 @@
  * homeworkContainer.appendChild(...);
  */
 let homeworkContainer = document.querySelector('#homework-container');
+debugger;
+var el_button = document.createElement('button');
+homeworkContainer.appendChild(el_button);
+el_button.addEventListener('click', createDiv);
 
 /**
  * Функция должна создавать и возвращать новый div с классом draggable-div и случайными размерами/цветом/позицией
@@ -23,6 +27,15 @@ let homeworkContainer = document.querySelector('#homework-container');
  * @return {Element}
  */
 function createDiv() {
+	
+	var div = document.createElement('div');
+	div.classList.add('draggable-div');
+	div.style.backgroundColor = "red";
+	div.style.width = "50px";
+	div.style.height = "20px";
+	div.style.position = "absolute";
+	return (div);
+
 }
 
 /**
