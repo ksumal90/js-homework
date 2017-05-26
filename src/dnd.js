@@ -14,10 +14,18 @@
  * homeworkContainer.appendChild(...);
  */
 let homeworkContainer = document.querySelector('#homework-container');
+function rand() {
+		return (Math.floor(Math.random() * 300) + 'px');
+}
 
-var el_button = document.createElement('button');
-homeworkContainer.appendChild(el_button);
-el_button.addEventListener('click', createDiv);
+function color() {
+	var r=Math.floor(Math.random() * (256));
+	var g=Math.floor(Math.random() * (256));
+	var b=Math.floor(Math.random() * (256));
+	var c='#' + r.toString(16) + g.toString(16) + b.toString(16);
+	return (c);
+}
+
 
 /**
  * Функция должна создавать и возвращать новый div с классом draggable-div и случайными размерами/цветом/позицией
@@ -27,15 +35,14 @@ el_button.addEventListener('click', createDiv);
  * @return {Element}
  */
 function createDiv() {
-	debugger;
 	var el = document.createElement('div');
 	el.classList.add('draggable-div');
-	el.style.backgroundColor = "red";
-	el.style.width = "50px";
-	el.style.height = "20px";
+	el.style.backgroundColor = color();
+	el.style.width = rand();
+	el.style.height = rand();
 	el.style.position = "absolute";
-	el.style.top = "20px";
-	el.style.left = "10px";
+	el.style.top = rand();
+	el.style.left = rand();
 	return (el);
 }
 
@@ -45,6 +52,18 @@ function createDiv() {
  * @param {Element} target
  */
 function addListeners(target) {
+	target.addEventListener('mousedown', function(e){
+		var elem = e.target;
+
+    	document.addEventListener('mousemove', function(e){
+			elem.style.left = e.pageX + 'px';
+    		elem.style.top = e.pageY + 'px';
+    	});
+    	
+    	target.addEventListener('mouseup', function(e){
+		   	elem = null;
+	    });
+  	});
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
