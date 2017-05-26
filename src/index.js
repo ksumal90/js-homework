@@ -114,7 +114,6 @@ function deleteTextNodes(where) {
  * должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
-    debugger;
     for (var i = 0; i < where.childNodes.length; i++) {
         var el = where.childNodes[i];
         if (el.nodeType == 3) {
@@ -152,19 +151,35 @@ function deleteTextNodesRecursive(where) {
  * }
  */
 function collectDOMStat(root) {
+    debugger;
     var obj = {
         texts:0,
-        tags:{},
-        classes:{}
+        tags: {},
+        classes: {}
     }
 
-    var child = root.childNodes;
-    //количество текстовых узлов
-    for (var i = 0; i < child.length; i++){
-        if (child[i].nodeType == 3){
-            obj.texts++;
+
+    var childRoot = root.childNodes;
+
+    for (var child of childRoot) {
+        var tag = child.tagName;
+        
+        if (tag){
+            writeTag(tag, obj.tags);
+        } else{
+            obj.texts+=1
         }
     }
+
+    function writeTag(tag, obj) {
+        if(tag in obj){
+            console.log ('Свойство уже есть');//такой тег уже есть
+            obj[tags]++;
+        } else{
+            obj[tags] = 1;
+        }
+   }
+  
 
     return obj;
     
