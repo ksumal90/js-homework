@@ -57,11 +57,11 @@ function addListeners(target) {
 
     	document.addEventListener('mousemove', function(e){
 			elem.style.left = e.pageX + 'px';
-    		elem.style.top = e.pageY + 'px';
+			elem.style.top = e.pageY + 'px';
     	});
     	
     	target.addEventListener('mouseup', function(e){
-		   	elem = null;
+			elem = null;
 	    });
   	});
 }
