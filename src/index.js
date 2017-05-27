@@ -1,232 +1,54 @@
-/* ДЗ 4 - работа с DOM */
+/* ДЗ 6.1 - Асинхронность и работа с сетью */
 
 /**
- * Функция должна создать элемент с тегом DIV, поместить в него текстовый узел и вернуть получившийся элемент
+ * Функция должна создавать Promise, который должен быть resolved через seconds секунду после создания
  *
- * @param {string} text - текст, который необходимо поместить в div
- * @return {Element}
+ * @param {number} seconds - количество секунд, через которое Promise должен быть resolved
+ * @return {Promise}
  */
-function createDivWithText(text) {
-    var element = document.createElement('div');
+function delayPromise(seconds) {
+	var promise = new Promise (function(resolve, reject){
+		setTimeout(function(){
+			 resolve();
+		}, seconds * 1000);
+	});
 
-    element.innerText = text;
-    return element;
+	return promise;
 }
 
 /**
- * Функция должна создать элемент с тегом A, установить значение для атрибута href и вернуть получившийся элемент
+ * Функция должна вернуть Promise, который должен быть разрешен массивом городов, загруженным из
+ * https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
+ * Элементы полученного массива должны быть отсортированы по имени города
  *
- * @param {string} hrefValue - значение для атрибута href
- * @return {Element}
+ * @return {Promise<Array<{name: String}>>}
  */
-function createAWithHref(hrefValue) {
-   var element = document.createElement('A');
+function loadAndSortTowns() {
+	var promise = new Promise(function(resolve, request){
+		function sortArr(a,b){
+			if (a.name > b.name) return 1;
+			if (a.name < b.name) return -1;
+		}
 
-   element.setAttribute('href', hrefValue)
-   return element;
-}
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json', true);//готовит объект, 
+		xhr.send();
+		
+		xhr.addEventListener('load', function(){
+			if (status > 400){
+				request();
+				return false;
+			}
+			var arr = JSON.parse(xhr.response);
+			arr.sort(sortArr);
+			resolve(arr);
+		});
+	})
 
-/**
- * Функция должна вставлять элемент what в начало элемента where
- *
- * @param {Element} what - что вставлять
- * @param {Element} where - куда вставлять
- */
-function prepend(what, where) {
-    where.insertBefore(what,where.firstChild);
-}
-
-/**
- * Функция должна перебрать все дочерние элементы элемента where
- * и вернуть массив, состоящий из тех дочерних элементов
- * следующим соседом которых является элемент с тегом P
- * Рекурсия - по желанию
- *
- * @param {Element} where - где искать
- * @return {Array<Element>}
- *
- * @example
- * для html '<div></div><p></p><a></a><span></span><p></p>'
- * функция должна вернуть: [div, span]
- * т.к. следующим соседом этих элементов является элемент с тегом P
- */
-function findAllPSiblings(where) {
-    var child = where.children;
-    var new_mass= [];
-
-    for (var i = 0; i < (child.length - 1); i++) {
-        if (child[i].nextElementSibling.tagName == "P"){
-            new_mass.push(child[i]);
-        } 
-    }
-
-    return (new_mass);
-}
-
-/**
- * Функция должна перебрать все дочерние узлы типа "элемент" внутри where
- * и вернуть массив, состоящий из текстового содержимого перебираемых элементов
- * Но похоже, что в код закралась ошибка, которую нужно найти и исправить
- *
- * @param {Element} where - где искать
- * @return {Array<string>}
- */
-function findError(where) {
-    var result = [];
-    for (var i = 0; i < where.children.length; i++) {
-        result.push(where.children[i].innerText);
-    }
-
-    return result;
-}
-
-/**
- * Функция должна перебрать все дочерние узлы элемента where
- * и удалить из него все текстовые узлы
- * Без рекурсии!
- * Будьте внимательны при удалении узлов,
- * можно получить неожиданное поведение при переборе узлов
- *
- * @param {Element} where - где искать
- *
- * @example
- * после выполнения функции, дерево <div></div>привет<p></p>loftchool!!!
- * должно быть преобразовано в <div></div><p></p>
- */
-function deleteTextNodes(where) {
-    var el = where.childNodes;
-    console.log (where.childNodes.length);
-    for (var i = 0; i < el.length; i++) {
-         if (el[i].nodeType == 3) {
-            el[i].remove();
-         }
-    }
-}
-
-/**
- * Выполнить предудыщее задание с использование рекурсии
- * то есть необходимо заходить внутрь каждого дочернего элемента
- *
- * @param {Element} where - где искать
- *
- * @example
- * после выполнения функции, дерево <span> <div> <b>привет</b> </div> <p>loftchool</p> !!!</span>
- * должно быть преобразовано в <span><div><b></b></div><p></p></span>
- */
-function deleteTextNodesRecursive(where) {
-    for (var i = 0; i < where.childNodes.length; i++) {
-        var el = where.childNodes[i];
-        if (el.nodeType == 3) {
-            el.remove();
-            i--;
-        } 
-        else {
-            deleteTextNodesRecursive(el);
-        }
-    }
-        
-    
-}
-
-/**
- * *** Со звездочкой ***
- * Необходимо собрать статистику по всем узлам внутри элемента root и вернуть ее в виде объекта
- * Статистика должна содержать:
- * - количество текстовых узлов
- * - количество элементов каждого класса
- * - количество элементов каждого тега
- * Для работы с классами рекомендуется использовать свойство classList
- * Постарайтесь не создавать глобальных переменных
- *
- * @param {Element} root - где собирать статистику
- * @return {{tags: Object<string, number>, classes: Object<string, number>, texts: number}}
- *
- * @example
- * для html <div class="some-class-1"><b>привет!</b> <b class="some-class-1 some-class-2">loftschool</b></div>
- * должен быть возвращен такой объект:
- * {
- *   tags: { DIV: 1, B: 2},
- *   classes: { "some-class-1": 2, "some-class-2": 1 },
- *   texts: 3
- * }
- */
-function collectDOMStat(root) {
-    debugger;
-    var obj = {
-        texts:0,
-        tags: {},
-        classes: {}
-    }
-
-
-    var childRoot = root.childNodes;
-
-    for (var child of childRoot) {
-        var tag = child.tagName;
-        
-        if (tag){
-            writeTag(tag, obj.tags);
-        } else{
-            obj.texts+=1
-        }
-    }
-
-    function writeTag(tag, obj) {
-        if(tag in obj){
-            console.log ('Свойство уже есть');//такой тег уже есть
-            obj[tags]++;
-        } else{
-            obj[tags] = 1;
-        }
-   }
-  
-
-    return obj;
-    
-}
-
-/**
- * *** Со звездочкой ***
- * Функция должна отслеживать добавление и удаление элементов внутри элемента where
- * Как только в where добавляются или удаляются элемента,
- * необходимо сообщать об этом при помощи вызова функции fn со специальным аргументом
- * В качестве аргумента должен быть передан объек с двумя свойствами:
- * - type: типа события (insert или remove)
- * - nodes: массив из удаленных или добавленных элементов (а зависимости от события)
- * Отслеживание должно работать вне зависимости от глубины создаваемых/удаляемых элементов
- * Рекомендуется использовать MutationObserver
- *
- * @param {Element} where - где отслеживать
- * @param {function(info: {type: string, nodes: Array<Element>})} fn - функция, которую необходимо вызвать
- *
- * @example
- * если в where или в одного из его детей добавляется элемент div
- * то fn должна быть вызвана с аргументов:
- * {
- *   type: 'insert',
- *   nodes: [div]
- * }
- *
- * ------
- *
- * если из where или из одного из его детей удаляется элемент div
- * то fn должна быть вызвана с аргументов:
- * {
- *   type: 'remove',
- *   nodes: [div]
- * }
- */
-function observeChildNodes(where, fn) {
+	return promise;
 }
 
 export {
-    createDivWithText,
-    createAWithHref,
-    prepend,
-    findAllPSiblings,
-    findError,
-    deleteTextNodes,
-    deleteTextNodesRecursive,
-    collectDOMStat,
-    observeChildNodes
+    delayPromise,
+    loadAndSortTowns
 };
