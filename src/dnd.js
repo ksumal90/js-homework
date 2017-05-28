@@ -52,16 +52,14 @@ function createDiv() {
  * @param {Element} target
  */
 function addListeners(target) {
-	target.addEventListener('mousedown', function(e){
-		var elem = e.target;
-
-    	document.addEventListener('mousemove', function(e){
-			elem.style.left = e.pageX + 'px';
-			elem.style.top = e.pageY + 'px';
-    	});
-    	
-    	target.addEventListener('mouseup', function(e){
-			elem = null;
+	target.addEventListener('mousedown', function(e) {
+		function mouseMoveHandler(e){
+			target.style.left = e.pageX + 'px';
+			target.style.top = e.pageY + 'px';
+	    };
+    	document.addEventListener('mousemove', mouseMoveHandler);
+     	target.addEventListener('mouseup', function(e){
+			document.removeEventListener('mousemove', mouseMoveHandler);
 	    });
   	});
 }
