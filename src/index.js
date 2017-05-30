@@ -1,87 +1,50 @@
-/* ДЗ 5 - DOM Events */
+/* ДЗ 7.1 - BOM */
 
 /**
- * Функция должна добавлять обработчик fn события eventName к элементу target
+ * Функция должна создавать окно с указанным именем и размерами
  *
- * @param {string} eventName - имя события, на которое нужно добавить обработчик
- * @param {Element} target - элемент, на который нужно добавить обработчик
- * @param {function} fn - обработчик
+ * @param {number} name - имя окна
+ * @param {number} width - ширина окна
+ * @param {number} height - высота окна
+ * @return {Window}
  */
-function addListener(eventName, target, fn) {
-    target.addEventListener(eventName, fn);
+function createWindow(name, width, height) {
+	return window.open(name,  width, height);
 }
 
 /**
- * Функция должна удалять обработчик fn события eventName у элемента target
+ * Функция должна закрывать указанное окно
  *
- * @param {string} eventName - имя события, для которого нужно удалить обработчик
- * @param {Element} target - элемент, у которого нужно удалить обработчик
- * @param {function} fn - обработчик
+ * @param {Window} window - окно, размер которого надо изменить
  */
-function removeListener(eventName, target, fn) {
-    target.removeEventListener(eventName, fn);
+function closeWindow(window) {
+	window.close();
 }
 
 /**
- * Функция должна добавлять к target обработчик события eventName, который должен отменять действие по умолчанию
+ * Функция должна создавать cookie с указанными именем и значением
  *
- * @param {string} eventName - имя события, для которого нужно удалить обработчик
- * @param {Element} target - элемент, на который нужно добавить обработчик
+ * @param name - имя
+ * @param value - значение
  */
-function skipDefault(eventName, target) {
-    target.addEventListener(eventName, function(e){
-        e.preventDefault();
-    });
+function createCookie(name, value) {
+	document.cookie = name + '=' + value;
 }
 
 /**
- * Функция должна эмулировать событие click для элемента target
+ * Функция должна удалять cookie с указанным именем
  *
- * @param {Element} target - элемент, на который нужно добавить обработчик
+ * @param name - имя
  */
-function emulateClick(target) {
-    var event = new Event('click');
-    target.dispatchEvent(event);
-    
-}
-
-/**
- * Функция должна добавить такой обработчик кликов к элементу target
- * который реагирует (вызывает fn) только на клики по элементам BUTTON внутри target
- *
- * @param {Element} target - элемент, на который нужно добавить обработчик
- * @param {function} fn - функция, которую нужно вызвать при клике на элемент BUTTON внутри target
- */
-function delegate(target, fn) {
-    target.addEventListener('click', function(e){
-        if (e.target.tagName == "BUTTON"){
-            fn();
-        }
-    });
-}
-
-/**
- * *** Со звездочкой ***
- * Функция должна добавить такой обработчик кликов к элементу target
- * который сработает только один раз и удалится
- * Постарайтесь не создавать глобальных переменных
- *
- * @param {Element} target - элемент, на который нужно добавить обработчик
- * @param {function} fn - обработчик
- */
-function once(target, fn) {
-     target.addEventListener('click', new_func);
-     function new_func(e){
-        fn();
-        target.removeEventListener('click', new_func);
-     }
+function deleteCookie(name) {
+	var data = new Date;
+	data.setSeconds(data.getSeconds() - 1);
+	document.cookie = name +'=; expires='+ data.toUTCString();
 }
 
 export {
-    addListener,
-    removeListener,
-    skipDefault,
-    emulateClick,
-    delegate,
-    once
+    createWindow,
+    closeWindow,
+    createCookie,
+    deleteCookie
 };
